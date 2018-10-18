@@ -4,65 +4,7 @@ namespace App\Models;
 
 use Eloquent as Model;
 
-/**
- * @SWG\Definition(
- *      definition="User",
- *      required={""},
- *      @SWG\Property(
- *          property="USER_ID",
- *          description="USER_ID",
- *          type="integer",
- *          format="int32"
- *      ),
- *      @SWG\Property(
- *          property="STRUCTURE_ID",
- *          description="STRUCTURE_ID",
- *          type="integer",
- *          format="int32"
- *      ),
- *      @SWG\Property(
- *          property="ACTIVE",
- *          description="ACTIVE",
- *          type="boolean"
- *      ),
- *      @SWG\Property(
- *          property="NAME",
- *          description="NAME",
- *          type="string"
- *      ),
- *      @SWG\Property(
- *          property="LAST_NAME",
- *          description="LAST_NAME",
- *          type="string"
- *      ),
- *      @SWG\Property(
- *          property="LOGIN",
- *          description="LOGIN",
- *          type="string"
- *      ),
- *      @SWG\Property(
- *          property="password",
- *          description="password",
- *          type="string"
- *      ),
- *      @SWG\Property(
- *          property="CREATED_BY",
- *          description="CREATED_BY",
- *          type="integer",
- *          format="int32"
- *      ),
- *      @SWG\Property(
- *          property="email",
- *          description="email",
- *          type="string"
- *      ),
- *      @SWG\Property(
- *          property="remember_token",
- *          description="remember_token",
- *          type="string"
- *      )
- * )
- */
+
 class User extends Model
 {
 
@@ -70,29 +12,25 @@ class User extends Model
 
     public $timestamps = false;
 
-    public $primaryKey = 'user_id';
+    public $primaryKey = 'id_user';
 
     public $fillable = [
-        'STRUCTURE_ID',
-        'ACTIVE',
-        'NAME',
-        'LAST_NAME',
-        'SECOND_NAME',
-        'LOGIN',
-        'password',
-        'LAST_LOGIN',
-        'DATE_REGISTER',
-        'TIMESTAMP_X',
-        'CREATED_BY',
-        'email',
+        'active_user',
+        'user_type',
+        'user_tin_user',
+        'user_pin_user',
+        'user_tin_company',
+        'user_soato_company',
+        'user_mobile',
+        'user_home_tel',
+        'user_oked_user',
+        'token_user',
+        'visible_data',
+        'company_right',
+        'ML_right',
+        'su_right',
+        'ws_right',
         'remember_token',
-        'IS_ADMIN',
-        'AUTH_TYPE',
-        "TIN",
-        "PIN",
-        "ADDRESS",
-        "COMMENT",
-        'api_token'
     ];
 
     /**
@@ -101,24 +39,22 @@ class User extends Model
      * @var array
      */
     protected $casts = [
-        'USER_ID' => 'integer',
-        'STRUCTURE_ID' => 'integer',
-        'ACTIVE' => 'boolean',
-        'NAME' => 'string',
-        'LAST_NAME' => 'string',
-        'SECOND_NAME' => 'string',
-        'LOGIN' => 'string',
-        'password' => 'string',
-        'CREATED_BY' => 'integer',
-        'email' => 'string',
+        'active_user' => 'boolean',
+        'user_type' => 'integer',
+        'user_tin_user' => 'string',
+        'user_pin_user' => 'string',
+        'user_tin_company' => 'string',
+        'user_soato_company' => 'string',
+        'user_mobile' => 'string',
+        'user_home_tel' => 'string',
+        'user_oked_user' => 'string',
+        'token_user' => 'string',
+        'visible_data' => 'boolean',
+        'company_right' => 'integer',
+        'ML_right' => 'integer',
+        'su_right' => 'integer',
+        'ws_right' => 'integer',
         'remember_token' => 'string',
-        'IS_ADMIN' => 'boolean',
-        'AUTH_TYPE' => 'string',
-        "TIN" => 'string',
-        "PIN" => 'string',
-        "ADDRESS" => 'string',
-        "COMMENT" => 'text',
-        'api_token' => 'string',
     ];
 
     /**
