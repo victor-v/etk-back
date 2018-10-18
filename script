@@ -1,0 +1,748 @@
+/*==============================================================*/
+/* DBMS name:      PostgreSQL 9.x                               */
+/* Created on:     18.10.2018 20:41:50                          */
+/*==============================================================*/
+
+
+drop table LC_WH;
+
+drop table VACANCY_WH;
+
+drop table constants;
+
+drop table errors;
+
+drop index Index_daterange_LC;
+
+drop index Index_TIN_LC;
+
+drop index Index_TaxPer_LC;
+
+drop index Index_WH_LC;
+
+drop index Index_Datetime_LC;
+
+drop table lc;
+
+drop index Index_Datetime_LOG;
+
+drop table logs;
+
+drop index oauth_access_tokens_user_id_index;
+
+drop table oauth_access_tokens;
+
+drop table oauth_auth_codes;
+
+drop index oauth_clients_user_id_index;
+
+drop table oauth_clients;
+
+drop index oauth_personal_access_clients_client_id_index;
+
+drop table oauth_personal_access_clients;
+
+drop index oauth_refresh_tokens_access_token_id_index;
+
+drop table oauth_refresh_tokens;
+
+drop index Index_daterange_pos;
+
+drop index Index_ID_STR;
+
+drop table positions;
+
+drop index Index_TIN;
+
+drop table structures;
+
+drop index Index_Type_U;
+
+drop table users;
+
+drop domain PASSPORT;
+
+drop domain PHONE;
+
+drop domain PIN;
+
+drop domain REGION;
+
+drop domain SALARY;
+
+drop domain TIN;
+
+drop sequence lc_id_lc_seq;
+
+drop sequence log_id_log_seq;
+
+drop sequence migrations_id_seq;
+
+drop sequence oauth_clients_id_seq;
+
+drop sequence oauth_personal_access_clients_id_seq;
+
+drop sequence position_id_position_seq;
+
+drop sequence struct_id_struct_seq;
+
+drop sequence user_id_user_seq;
+
+drop user elc;
+
+/*==============================================================*/
+/* User: elc                                                    */
+/*==============================================================*/
+create user elc sysid 17934 createdb createuser;
+
+create sequence lc_id_lc_seq;
+
+create sequence log_id_log_seq;
+
+create sequence migrations_id_seq;
+
+create sequence oauth_clients_id_seq;
+
+create sequence oauth_personal_access_clients_id_seq;
+
+create sequence position_id_position_seq;
+
+create sequence struct_id_struct_seq;
+
+create sequence user_id_user_seq;
+
+/*==============================================================*/
+/* Domain: PASSPORT                                             */
+/*==============================================================*/
+create domain PASSPORT as CHAR(9);
+
+/*==============================================================*/
+/* Domain: PHONE                                                */
+/*==============================================================*/
+create domain PHONE as CHAR(12);
+
+/*==============================================================*/
+/* Domain: PIN                                                  */
+/*==============================================================*/
+create domain PIN as CHAR(12);
+
+/*==============================================================*/
+/* Domain: REGION                                               */
+/*==============================================================*/
+create domain REGION as CHAR(10);
+
+/*==============================================================*/
+/* Domain: SALARY                                               */
+/*==============================================================*/
+create domain SALARY as NUMERIC(20,2);
+
+/*==============================================================*/
+/* Domain: TIN                                                  */
+/*==============================================================*/
+create domain TIN as CHAR(9);
+
+/*==============================================================*/
+/* Table: LC_WH                                                 */
+/*==============================================================*/
+CREATE SERVER IF NOT EXISTS warehouse
+        FOREIGN DATA WRAPPER postgres_fdw
+        OPTIONS (host '192.168.1.102', port '5432', dbname 'warehouse');
+
+CREATE USER MAPPING NOT EXISTS FOR workbook SERVER warehouse OPTIONS (user 'elc', password 'kDWXHaxVFNRUncN7');
+
+create foreign table LC_WH (
+   id_wh                INT4                 not null,
+   parent_id_wh         INT4                 null,
+   active_wh            BOOL                 null default TRUE,
+   datetime_wh          TIMESTAMP            not null default CURRENT_TIMESTAMP,
+   daterange_wh         daterange            null,
+   type_wh              INT2                 not null default 0
+      constraint CKC_TYPE_WH_LC_WH check (type_wh in (0,1,2,3)),
+   direct_wh            BOOL                 not null default FALSE,
+   edit_id_wh           INT4                 null,
+   pin_wh               CHAR(12)             not null,
+   taxper_wh            CHAR(9)              null,
+   passport_wh          CHAR(9)              null,
+   familyperson_wh      VARCHAR              not null,
+   nameperson_wh        VARCHAR              not null,
+   midlenameperson_wh   VARCHAR              null,
+   tin_wh               CHAR(9)              not null,
+   name_wh              VARCHAR              not null,
+   oked_wh              CHAR(5)              not null,
+   regionent_wh         CHAR(10)             not null,
+   department_wh        VARCHAR              null,
+   position_wh          VARCHAR              null,
+   prof_wh              CHAR(6)              null,
+   id_pos_wh            INT8                 null,
+   salary_wh            NUMERIC(20,2)        null,
+   flagbonus_wh         BOOL                 null,
+   termsalaru_wh        INT2                 null default 0
+      constraint CKC_TERMSALARU_WH_LC_WH check (termsalaru_wh is null or (termsalaru_wh in (1,2))),
+   typeemp_wh           INT2                 null default 1
+      constraint CKC_TYPEEMP_WH_LC_WH check (typeemp_wh is null or (typeemp_wh in (1,2,3,4))),
+   codenskz_wh          CHAR(6)              null,
+   order_wh             VARCHAR              null,
+   dateorder_wh         DATE                 null,
+   article_wh           VARCHAR              null,
+   specspo_wh           VARCHAR              null,
+   codespo_wh           CHAR(6)              null,
+   specvo_wh            VARCHAR              null,
+   codevo_wh            CHAR(6)              null,
+   acceptemployer_wh    CHAR(256)            null,
+   acceptemployee_wh    CHAR(256)            null,
+   id_wb                INT8                 null,
+   value_fields_wh      jsonb                null
+)
+SERVER warehouse
+        OPTIONS (table_name 'lc');
+
+comment on column LC_WH.id_wh is
+'Идентификатор ТД';
+
+comment on column LC_WH.parent_id_wh is
+'Родительская запись';
+
+comment on column LC_WH.datetime_wh is
+'Дата записи ТД';
+
+comment on column LC_WH.type_wh is
+'Типизация ТД';
+
+comment on column LC_WH.direct_wh is
+'Направление записи ТД';
+
+comment on column LC_WH.edit_id_wh is
+'Редактируемая запись';
+
+comment on column LC_WH.pin_wh is
+'Идентификатор ФЛ';
+
+comment on column LC_WH.familyperson_wh is
+'Фамилия';
+
+comment on column LC_WH.nameperson_wh is
+'Имя';
+
+comment on column LC_WH.midlenameperson_wh is
+'Отчество';
+
+comment on column LC_WH.tin_wh is
+'Идентификатор ЮЛ (ИНН)';
+
+comment on column LC_WH.name_wh is
+'Наименование ЮЛ';
+
+comment on column LC_WH.department_wh is
+'Подразделение';
+
+comment on column LC_WH.position_wh is
+'Должность';
+
+comment on column LC_WH.salary_wh is
+'Зарплата';
+
+comment on column LC_WH.order_wh is
+'Приказ';
+
+comment on column LC_WH.dateorder_wh is
+'Дата приказа';
+
+comment on column LC_WH.article_wh is
+'Статья';
+
+/*==============================================================*/
+/* Table: VACANCY_WH                                            */
+/*==============================================================*/
+CREATE SERVER IF NOT EXISTS warehouse
+        FOREIGN DATA WRAPPER postgres_fdw
+        OPTIONS (host '192.168.1.102', port '5432', dbname 'warehouse');
+
+CREATE USER MAPPING NOT EXISTS FOR workbook SERVER warehouse OPTIONS (user 'elc', password 'kDWXHaxVFNRUncN7');
+
+create foreign table VACANCY_WH (
+   ID_VAC               INT8                 not null default nextval('Sequence_ID_VAC'::regclass),
+   TIN_VAC              CHAR(9)              not null,
+   Region_VAC           CHAR(10)             not null,
+   OKED_VAC             CHAR(5)              null,
+   NameEnt_VAC          VARCHAR              not null,
+   NameStr_VAC          VARCHAR              not null,
+   NamePos_VAC          VARCHAR              not null,
+   CodeProf_VAC         CHAR(6)              not null,
+   Salary_VAC           MONEY                not null,
+   Request_VAC          VARCHAR              null,
+   RowMove_POS          INT8                 null,
+   Region4_VAC          CHAR(4)              not null,
+   daterange_VAC        daterange            null
+)
+SERVER warehouse
+        OPTIONS (table_name 'VACANCY');
+
+comment on table VACANCY_WH is
+'Свободные вакансии';
+
+comment on column VACANCY_WH.NameStr_VAC is
+'Идентификатор структуры организации';
+
+comment on column VACANCY_WH.Salary_VAC is
+'Оклад должностной';
+
+comment on column VACANCY_WH.Request_VAC is
+'Требования к должности';
+
+comment on column VACANCY_WH.RowMove_POS is
+'Идентификатор вакансии в хранилище';
+
+/*==============================================================*/
+/* Table: constants                                             */
+/*==============================================================*/
+create table constants (
+   id_const             SERIAL               not null,
+   group_const          INT2                 null
+      constraint CKC_GROUP_CONST_CONSTANT check (group_const is null or (group_const in (1,2,3,10))),
+   code_const           VARCHAR              null,
+   type_const           INT2                 null
+      constraint CKC_TYPE_CONST_CONSTANT check (type_const is null or (type_const in (1,2,3,4,5,6))),
+   value_const_ru       jsonb                null,
+   value_const_uz       jsonb                null,
+   commentconst         VARCHAR              null,
+   constraint PK_CONSTANTS primary key (id_const)
+);
+
+/*==============================================================*/
+/* Table: errors                                                */
+/*==============================================================*/
+create table errors (
+   id_err               SERIAL               not null,
+   desc_err_ru          VARCHAR              null,
+   desc_err_uz          VARCHAR              null,
+   code                 VARCHAR              not null,
+   constraint PK_ERRORS primary key (id_err)
+);
+
+/*==============================================================*/
+/* Table: lc                                                    */
+/*==============================================================*/
+create table lc (
+   id_lc                INT8                 not null default nextval('lc_id_lc_seq'::regclass),
+   parent_id_lc         INT8                 null,
+   active_lc            BOOL                 null default TRUE,
+   datetime_lc          TIMESTAMP            not null default CURRENT_TIMESTAMP,
+   daterange_lc         daterange            null,
+   type_lc              INT2                 not null default 0
+      constraint CKC_TYPE_LC_LC check (type_lc in (0,1,2,3)),
+   direct_lc            BOOL                 not null default FALSE,
+   edit_id_lc           INT8                 null,
+   pin_lc               CHAR(12)             not null,
+   taxper_lc            CHAR(9)              null,
+   passport_lc          CHAR(9)              null,
+   familyperson_lc      VARCHAR              not null,
+   nameperson_lc        VARCHAR              not null,
+   midlenameperson_lc   VARCHAR              null,
+   tin_lc               CHAR(9)              not null,
+   name_lc              VARCHAR              not null,
+   oked_lc              CHAR(5)              not null,
+   regionent_lc         CHAR(10)             not null,
+   department_lc        VARCHAR              null,
+   position_lc          VARCHAR              null,
+   prof_lc              CHAR(6)              null,
+   id_position          INT8                 null,
+   salary_lc            NUMERIC(20,2)        null,
+   flagbonus_lc         BOOL                 null,
+   termsalaru_lc        INT2                 null default 1
+      constraint CKC_TERMSALARU_LC_LC check (termsalaru_lc is null or (termsalaru_lc in (1,2))),
+   typeemp_lc           INT2                 null default 1
+      constraint CKC_TYPEEMP_LC_LC check (typeemp_lc is null or (typeemp_lc in (1,2,3,4))),
+   codenskz_lc          CHAR(6)              null,
+   order_lc             VARCHAR              null,
+   dateorder_lc         DATE                 null,
+   article_lc           VARCHAR              null,
+   specspo_lc           VARCHAR              null,
+   codespo_ls           CHAR(6)              null,
+   specvo_ls            VARCHAR              null,
+   codevo_ls            CHAR(6)              null,
+   acceptemployer_lc    CHAR(256)            null,
+   acceptemployee_lc    CHAR(256)            null,
+   warehouse_id         INT8                 null,
+   value_fields_lc      jsonb                null,
+   constraint PK_LC primary key (id_lc)
+);
+
+comment on table lc is
+'Трудовые договоры';
+
+comment on column lc.id_lc is
+'Идентификатор ТД';
+
+comment on column lc.parent_id_lc is
+'Родительская запись';
+
+comment on column lc.datetime_lc is
+'Дата записи ТД';
+
+comment on column lc.type_lc is
+'Типизация ТД';
+
+comment on column lc.direct_lc is
+'Направление записи ТД';
+
+comment on column lc.edit_id_lc is
+'Редактируемая запись';
+
+comment on column lc.pin_lc is
+'Идентификатор ФЛ';
+
+comment on column lc.familyperson_lc is
+'Фамилия';
+
+comment on column lc.nameperson_lc is
+'Имя';
+
+comment on column lc.midlenameperson_lc is
+'Отчество';
+
+comment on column lc.tin_lc is
+'Идентификатор ЮЛ (ИНН)';
+
+comment on column lc.name_lc is
+'Наименование ЮЛ';
+
+comment on column lc.department_lc is
+'Подразделение';
+
+comment on column lc.position_lc is
+'Должность';
+
+comment on column lc.salary_lc is
+'Зарплата';
+
+comment on column lc.order_lc is
+'Приказ';
+
+comment on column lc.dateorder_lc is
+'Дата приказа';
+
+comment on column lc.article_lc is
+'Статья';
+
+/*==============================================================*/
+/* Index: Index_Datetime_LC                                     */
+/*==============================================================*/
+create  index Index_Datetime_LC on lc (
+datetime_lc
+);
+
+/*==============================================================*/
+/* Index: Index_WH_LC                                           */
+/*==============================================================*/
+create  index Index_WH_LC on lc (
+warehouse_id
+);
+
+/*==============================================================*/
+/* Index: Index_TaxPer_LC                                       */
+/*==============================================================*/
+create  index Index_TaxPer_LC on lc (
+taxper_lc
+);
+
+/*==============================================================*/
+/* Index: Index_TIN_LC                                          */
+/*==============================================================*/
+create  index Index_TIN_LC on lc (
+tin_lc
+);
+
+/*==============================================================*/
+/* Index: Index_daterange_LC                                    */
+/*==============================================================*/
+create  index Index_daterange_LC on lc using GIST (
+daterange_lc
+);
+
+/*==============================================================*/
+/* Table: logs                                                  */
+/*==============================================================*/
+create table logs (
+   id_log               INT8                 not null default nextval('log_id_log_seq'::regclass),
+   id_user              INT8                 null,
+   user_pin_log         CHAR(12)             not null,
+   user_tin_log         CHAR(9)              null,
+   time_log             TIMESTAMP            null default CURRENT_TIMESTAMP,
+   sql_table            VARCHAR              null,
+   sql_operation        INT2                 null
+      constraint CKC_SQL_OPERATION_LOGS check (sql_operation is null or (sql_operation in (0,1,2,3))),
+   sql_row_id           INT4                 null,
+   sql_old_value        jsonb                null,
+   sql_new_value        jsonb                null,
+   constraint PK_LOGS primary key (id_log)
+);
+
+comment on column logs.sql_old_value is
+'Старое значение в виде JSON-строки';
+
+comment on column logs.sql_new_value is
+'Новое значение в виде JSON-строки';
+
+/*==============================================================*/
+/* Index: Index_Datetime_LOG                                    */
+/*==============================================================*/
+create  index Index_Datetime_LOG on logs (
+( id_log ),
+( sql_table ),
+( sql_row_id ),
+( time_log )
+);
+
+/*==============================================================*/
+/* Table: oauth_access_tokens                                   */
+/*==============================================================*/
+create table oauth_access_tokens (
+   id                   VARCHAR(100)         not null,
+   user_id              INT8                 null,
+   client_id            INT8                 null,
+   name                 VARCHAR(255)         null,
+   scope                TEXT                 null,
+   revoked              BOOL                 not null,
+   created_at           TIMESTAMP            null,
+   updatetd_at          TIMESTAMP            null,
+   expires_at           TIMESTAMP            null,
+   constraint PK_OAUTH_ACCESS_TOKENS primary key (id)
+);
+
+/*==============================================================*/
+/* Index: oauth_access_tokens_user_id_index                     */
+/*==============================================================*/
+create  index oauth_access_tokens_user_id_index on oauth_access_tokens using BTREE (
+user_id
+);
+
+/*==============================================================*/
+/* Table: oauth_auth_codes                                      */
+/*==============================================================*/
+create table oauth_auth_codes (
+   id                   VARCHAR(100)         not null,
+   user_id              INT8                 not null,
+   client_id            INT8                 not null,
+   scopes               TEXT                 null,
+   revoked              BOOL                 not null,
+   expires_at           TIMESTAMP            null,
+   constraint PK_OAUTH_AUTH_CODES primary key (id)
+);
+
+/*==============================================================*/
+/* Table: oauth_clients                                         */
+/*==============================================================*/
+create table oauth_clients (
+   id                   INT8                 not null,
+   user_id              INT8                 not null,
+   name                 VARCHAR(255)         not null,
+   secret               VARCHAR(100)         not null,
+   redirect             TEXT                 not null,
+   personal_access_client BOOL                 not null,
+   password_client      BOOL                 not null,
+   revoked              BOOL                 not null,
+   created_at           TIMESTAMP            null,
+   updated_at           TIMESTAMP            null,
+   constraint PK_OAUTH_CLIENTS primary key (id)
+);
+
+/*==============================================================*/
+/* Index: oauth_clients_user_id_index                           */
+/*==============================================================*/
+create  index oauth_clients_user_id_index on oauth_clients using BTREE (
+user_id
+);
+
+/*==============================================================*/
+/* Table: oauth_personal_access_clients                         */
+/*==============================================================*/
+create table oauth_personal_access_clients (
+   id                   INT8                 not null,
+   client_id            INT8                 not null,
+   created_at           TIMESTAMP            null,
+   updated_at           TIMESTAMP            null,
+   constraint PK_OAUTH_PERSONAL_ACCESS_CLIEN primary key (id)
+);
+
+/*==============================================================*/
+/* Index: oauth_personal_access_clients_client_id_index         */
+/*==============================================================*/
+create  index oauth_personal_access_clients_client_id_index on oauth_personal_access_clients using BTREE (
+client_id
+);
+
+/*==============================================================*/
+/* Table: oauth_refresh_tokens                                  */
+/*==============================================================*/
+create table oauth_refresh_tokens (
+   id                   VARCHAR(100)         not null,
+   access_token_id      VARCHAR(100)         not null,
+   revoked              BOOL                 not null,
+   expires_at           TIMESTAMP            null,
+   constraint PK_OAUTH_REFRESH_TOKENS primary key (id)
+);
+
+/*==============================================================*/
+/* Index: oauth_refresh_tokens_access_token_id_index            */
+/*==============================================================*/
+create  index oauth_refresh_tokens_access_token_id_index on oauth_refresh_tokens using BTREE (
+access_token_id
+);
+
+/*==============================================================*/
+/* Table: positions                                             */
+/*==============================================================*/
+create table positions (
+   id_position          INT8                 not null default nextval('position_id_position_seq'::regclass),
+   id_struct            INT8                 null,
+   name_position        VARCHAR              null,
+   daterange_pos        daterange            null,
+   open_at_pos          DATE                 null,
+   close_at_pos         DATE                 null,
+   kodp_code            CHAR(6)              null,
+   position_salary      NUMERIC(20,2)        null,
+   position_requirements VARCHAR              null,
+   warehouse_row_id     INT8                 null,
+   position_form        int2                 null
+      constraint CKC_POSITION_FORM_POSITION check (position_form is null or (position_form in (0,1,2,3))),
+   constraint PK_POSITIONS primary key (id_position)
+);
+
+comment on table positions is
+'Рабочие места в организации';
+
+comment on column positions.id_struct is
+'Идентификатор структуры организации';
+
+comment on column positions.position_salary is
+'Оклад должностной';
+
+comment on column positions.position_requirements is
+'Требования к должности';
+
+comment on column positions.warehouse_row_id is
+'Идентификатор вакансии в хранилище';
+
+/*==============================================================*/
+/* Index: Index_ID_STR                                          */
+/*==============================================================*/
+create  index Index_ID_STR on positions (
+id_struct
+);
+
+/*==============================================================*/
+/* Index: Index_daterange_pos                                   */
+/*==============================================================*/
+create  index Index_daterange_pos on positions using GIST (
+daterange_pos
+);
+
+/*==============================================================*/
+/* Table: structures                                            */
+/*==============================================================*/
+create table structures (
+   id_struct            INT8                 not null default nextval('struct_id_struct_seq'::regclass),
+   parent_id_struct     INT8                 null,
+   name_struct          VARCHAR              null,
+   tin_orgstruct        CHAR(9)              null,
+   open_at_struct       DATE                 null,
+   close_at_struct      DATE                 null,
+   oked_struct          CHAR(5)              null,
+   constraint PK_STRUCTURES primary key (id_struct)
+);
+
+comment on table structures is
+'Структура организации';
+
+comment on column structures.id_struct is
+'Идентификатор структуры организации';
+
+comment on column structures.parent_id_struct is
+'Идентификатор структуры организации';
+
+comment on column structures.tin_orgstruct is
+'ИНН ЮЛ';
+
+comment on column structures.open_at_struct is
+'Дата старта структуры';
+
+comment on column structures.close_at_struct is
+'Дата стопа структуры';
+
+/*==============================================================*/
+/* Index: Index_TIN                                             */
+/*==============================================================*/
+create  index Index_TIN on structures (
+tin_orgstruct
+);
+
+/*==============================================================*/
+/* Table: users                                                 */
+/*==============================================================*/
+create table users (
+   id_user              INT8                 not null default nextval('user_id_user_seq'::regclass),
+   active_user          BOOL                 null,
+   user_type            INT2                 not null default 0
+      constraint CKC_USER_TYPE_USERS check (user_type in (0,1,2,3)),
+   user_tin_user        CHAR(9)              null,
+   user_pin_user        CHAR(12)             not null,
+   user_tin_company     CHAR(9)              null,
+   user_soato_company   CHAR(10)             null,
+   user_mobile          CHAR(12)             null,
+   user_home_tel        CHAR(12)             null,
+   user_oked_user       CHAR(5)              null,
+   token_user           CHAR(64)             null,
+   visible_data         BOOL                 not null default false,
+   company_right        INT2                 null
+      constraint CKC_COMPANY_RIGHT_USERS check (company_right is null or (company_right in (1,2,3,4,5))),
+   ML_right             INT2                 null
+      constraint CKC_ML_RIGHT_USERS check (ML_right is null or (ML_right in (1,2,3))),
+   su_right             INT2                 null default 1
+      constraint CKC_SU_RIGHT_USERS check (su_right is null or (su_right in (1,2,3))),
+   ws_right             INT2                 null
+      constraint CKC_WS_RIGHT_USERS check (ws_right is null or (ws_right in (1,2,3))),
+   password             VARCHAR(255)         null,
+   remember_token       VARCHAR(100)         null,
+   constraint PK_USERS primary key (id_user)
+);
+
+/*==============================================================*/
+/* Index: Index_Type_U                                          */
+/*==============================================================*/
+create  index Index_Type_U on users (
+user_type,
+user_pin_user,
+user_tin_company,
+user_soato_company
+);
+
+alter table lc
+   add constraint FK_LC_RE_LC_EDIT_LC foreign key (edit_id_lc)
+      references lc (id_lc)
+      on delete restrict on update restrict;
+
+alter table lc
+   add constraint FK_LC_REF_LC_PARENT_LC foreign key (parent_id_lc)
+      references lc (id_lc)
+      on delete restrict on update restrict;
+
+alter table lc
+   add constraint FK_LC_REF_POSITION foreign key (id_position)
+      references positions (id_position)
+      on delete restrict on update restrict;
+
+alter table logs
+   add constraint FK_LOGS_REFERENCE_USERS foreign key (id_user)
+      references users (id_user)
+      on delete set null;
+
+alter table positions
+   add constraint FK_POS_REF_STR foreign key (id_struct)
+      references structures (id_struct)
+      on delete restrict on update restrict;
+
+alter table structures
+   add constraint FK_STR_REF_STR foreign key (parent_id_struct)
+      references structures (id_struct)
+      on delete restrict on update restrict;
+
