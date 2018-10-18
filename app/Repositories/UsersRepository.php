@@ -17,11 +17,6 @@ class UserRepository extends BaseRepo
         'NAME',
         'LAST_NAME',
         'SECOND_NAME',
-        'LOGIN',
-        'password',
-        'LAST_LOGIN',
-        'DATE_REGISTER',
-        'TIMESTAMP_X',
         'CREATED_BY',
         'email',
         'remember_token'
