@@ -5,7 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 
 
-class User extends Model
+class Users extends Model
 {
 
     public $table = 'users';
@@ -31,6 +31,7 @@ class User extends Model
         'su_right',
         'ws_right',
         'remember_token',
+        'password',
     ];
 
     /**
@@ -56,7 +57,7 @@ class User extends Model
         'ws_right' => 'integer',
         'remember_token' => 'string',
     ];
-
+    protected $hidden = ['password'];
     /**
      * Validation rules
      *
