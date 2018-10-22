@@ -31,6 +31,7 @@ class RouteRegistrar
      */
     public function all()
     {
+//        TODO не забыть закрыть остальные маршруты
         $this->forAuthorization();
         $this->forAccessTokens();
         $this->forTransientTokens();
@@ -67,6 +68,7 @@ class RouteRegistrar
      */
     public function forAccessTokens()
     {
+        //TODO походу только этот и нужен
         $this->router->post('/token', [
             'uses' => 'AccessTokenController@issueToken',
             'middleware' => 'throttle',

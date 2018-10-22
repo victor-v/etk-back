@@ -7,6 +7,7 @@ use Illuminate\Contracts\Events\Dispatcher;
 use App\Passport\Events\RefreshTokenCreated;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
+use Carbon\Carbon;
 
 class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 {
@@ -77,7 +78,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
     public function revokeRefreshToken($tokenId)
     {
         $this->database->table('oauth_refresh_tokens')
-                    ->where('id', $tokenId)->update(['revoked' => true]);
+                    ->where('id', $tokenId)->update(['expires_at' => Carbon::now()->addSecond(10)]);
     }
 
     /**

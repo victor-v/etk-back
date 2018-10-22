@@ -38,7 +38,7 @@ class UserRepository implements UserRepositoryInterface
         if (is_null($model = config('auth.providers.'.$provider.'.model'))) {
             throw new RuntimeException('Unable to determine authentication model from configuration.');
         }
-
+        //TODO тут изменяются или нет)
         if (method_exists($model, 'findForPassport')) {
             $user = (new $model)->findForPassport($username);
         } else {

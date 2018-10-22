@@ -13,15 +13,4 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::group([
-    'prefix' => 'auth', 'middleware' => 'cors',
-], function () {
-    Route::post('login', 'UsersLoginAPIController@login');
-    Route::post('signup', 'UsersLoginAPIController@signup');
-});
-
-
+//TODO не забыть throttle
