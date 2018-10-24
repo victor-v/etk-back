@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\v1;
 
-use App\Models\User;
-use InfyOm\Generator\Common\BaseRepository;
-use App\Repositories\BaseRepo;
+use App\Models\Users;
+use App\Repositories\BaseRepository;
 
-class UserRepository extends BaseRepo
+class UsersRepository extends BaseRepository
 {
     /**
      * @var array
@@ -17,11 +16,6 @@ class UserRepository extends BaseRepo
         'NAME',
         'LAST_NAME',
         'SECOND_NAME',
-        'LOGIN',
-        'password',
-        'LAST_LOGIN',
-        'DATE_REGISTER',
-        'TIMESTAMP_X',
         'CREATED_BY',
         'email',
         'remember_token'
@@ -32,6 +26,6 @@ class UserRepository extends BaseRepo
      **/
     public function model()
     {
-        return User::class;
+        return Users::class;
     }
 }
