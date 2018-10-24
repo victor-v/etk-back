@@ -7,15 +7,15 @@ use App\Http\Requests\API\v1\UpdateErrorsAPIRequest;
 use App\Models\v1\Errors;
 use App\Repositories\v1\ErrorsRepository;
 use Illuminate\Http\Request;
-use App\Http\Controllers\AppBaseController;
+use Illuminate\Support\Facades\DB;
 use Response;
 
 /**
- * Class ErrorsController
+ * Class ErrorsAPIController
  * @package App\Http\Controllers\API\v1
  */
 
-class ErrorsAPIController extends AppBaseController
+class ErrorsAPIController extends AppAPIBaseController
 {
     /** @var  ErrorsRepository */
     private $errorsRepository;
@@ -35,9 +35,10 @@ class ErrorsAPIController extends AppBaseController
     public function index(Request $request)
     {
 
-        $errors = $this->errorsRepository->all();
+        //$errors = DB::select('SELECT public."ErrorList"()')[0]->ErrorList;
 
-        return $this->sendResponse($errors->toArray(), 'Errors retrieved successfully');
+        return Response::json(json_decode(DB::select('SELECT public."ErrorList"()')[0]->ErrorList));
+       // return $this->sendResponse($errors, 'Errors retrieved successfully');
     }
 
     /**

@@ -5,10 +5,11 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use HasApiTokens, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -19,6 +20,8 @@ class User extends Authenticatable
         'user_pin_user',
     ];
 
+    public $primaryKey = 'id_user';
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -28,5 +31,11 @@ class User extends Authenticatable
         'password',
     ];
 
-    protected $username = 'user_pin_user';
+
+
+    public function findForPassport($username) {
+        return $this->where('user_pin_user', $username)->first();
+    }
+
+
 }

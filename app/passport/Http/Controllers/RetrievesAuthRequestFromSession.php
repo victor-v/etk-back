@@ -1,6 +1,6 @@
 <?php
 
-namespace LApp\Passport\Http\Controllers;
+namespace App\Passport\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;

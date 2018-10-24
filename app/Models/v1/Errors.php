@@ -20,13 +20,13 @@ class Errors extends Model
     use SoftDeletes;
 
     public $table = 'errors';
-    
+
+    public $primaryKey = 'id_err';
 
     protected $dates = ['deleted_at'];
 
 
     public $fillable = [
-        'id_err',
         'desc_err_ru',
         'desc_err_uz',
         'code'

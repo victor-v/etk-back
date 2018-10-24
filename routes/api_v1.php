@@ -14,3 +14,7 @@ use Illuminate\Http\Request;
 */
 
 //TODO не забыть throttle
+Route::group(['middleware' => ['auth:api','cors','throttle']], function() {
+    Route::resource('errors', 'ErrorsAPIController');
+    Route::resource('works', 'WorksAPIController');
+});
