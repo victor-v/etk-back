@@ -51,7 +51,7 @@ class WorksAPIController extends AppAPIBaseController
     public function store(CreateWorksAPIRequest $request)
     {
         $input = $request->all();
-        sa
+
 
         $Works = $this->WorksRepository->create($input);
 
