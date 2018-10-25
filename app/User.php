@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Passport\HasApiTokens;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
@@ -17,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'user_pin_user',
+        'user_pin_user','password','user_tin_company'
     ];
 
     public $primaryKey = 'id_user';
@@ -32,9 +33,25 @@ class User extends Authenticatable
     ];
 
 
+    //TODO переделать это
+    public function findForPassport($request, $username) {
 
-    public function findForPassport($username) {
-        return $this->where('user_pin_user', $username)->first();
+        $user =  $this->where('user_pin_user', $username)->where('user_tin_company',$request->getParsedBody()['user_tin_company'])->first();
+        if (!$user) {
+            $user = new User([
+                'user_pin_user' => $username,
+                'password' => bcrypt('123456'),
+                'user_tin_company' => $request->getParsedBody()['user_tin_company']
+            ]);
+            $user->save();
+
+            $structure = \Illuminate\Support\Facades\DB::table('structures')->where('tin_orgstruct',$request->getParsedBody()['user_tin_company'])->first();
+            if (!$structure){
+                \Illuminate\Support\Facades\DB::table('structures')
+                    ->insert(['tin_orgstruct' => $request->getParsedBody()['user_tin_company'], 'name_struct' => $request->getParsedBody()['user_tin_company'],'datetrange_struct' => '['.Carbon::now()->toDateString().',)']);
+            }
+        }
+        return $user;
     }
 
 

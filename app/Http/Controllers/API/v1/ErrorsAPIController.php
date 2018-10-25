@@ -35,10 +35,9 @@ class ErrorsAPIController extends AppAPIBaseController
     public function index(Request $request)
     {
 
-        //$errors = DB::select('SELECT public."ErrorList"()')[0]->ErrorList;
+        $errors = json_decode(DB::select('SELECT public."ErrorList"()')[0]->ErrorList);
 
-        return Response::json(json_decode(DB::select('SELECT public."ErrorList"()')[0]->ErrorList));
-       // return $this->sendResponse($errors, 'Errors retrieved successfully');
+        return $this->sendResponse($errors, 'Errors retrieved successfully');
     }
 
     /**
