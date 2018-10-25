@@ -35,9 +35,10 @@ class WorksAPIController extends AppAPIBaseController
     public function index(Request $request)
     {
 
-        return Response::json(json_decode(DB::select('SELECT public."PersonWorks"(\''.auth()->user()->user_pin_user.'\',\''.$request->page.'\')')[0]->PersonWorks));
+        $works = json_decode(DB::select('SELECT public."PersonWorks"(\''.auth()->user()->user_pin_user.'\',\''.$request->page.'\')')[0]->PersonWorks);
 
-       // return $this->sendResponse($works, 'Works retrieved successfully');
+        return $this->sendResponse($works, 'Works retrieved successfully');
+
     }
 
     /**

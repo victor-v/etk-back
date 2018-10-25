@@ -14,3 +14,14 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::resource('constants', 'ConstantsController');
+
+Route::resource('logs', 'LogsController');
+
+Route::resource('positions', 'PositionsController');
+
+Route::resource('structures', 'StructuresController');
+
+Route::resource('vacancies', 'VacancyController');
