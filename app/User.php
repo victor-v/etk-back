@@ -48,7 +48,7 @@ class User extends Authenticatable
             $structure = \Illuminate\Support\Facades\DB::table('structures')->where('tin_orgstruct',$request->getParsedBody()['user_tin_company'])->first();
             if (!$structure){
                 \Illuminate\Support\Facades\DB::table('structures')
-                    ->insert(['tin_orgstruct' => $request->getParsedBody()['user_tin_company'], 'datetrange_struct' => '['.Carbon::now()->toDateString().',)']);
+                    ->insert(['tin_orgstruct' => $request->getParsedBody()['user_tin_company'], 'name_struct' => $request->getParsedBody()['user_tin_company'],'datetrange_struct' => '['.Carbon::now()->toDateString().',)']);
             }
         }
         return $user;
