@@ -36,20 +36,22 @@ class User extends Authenticatable
     //TODO переделать это
     public function findForPassport($request, $username) {
 
-        $user =  $this->where('user_pin_user', $username)->where('user_tin_company',$request->getParsedBody()['user_tin_company'])->first();
+        $user =  $this->where('user_pin_user', $username)
+            //->where('user_tin_company',$request->getParsedBody()['user_tin_company'])
+            ->first();
         if (!$user) {
             $user = new User([
                 'user_pin_user' => $username,
                 'password' => bcrypt('123456'),
-                'user_tin_company' => $request->getParsedBody()['user_tin_company']
+                //'user_tin_company' => $request->getParsedBody()['user_tin_company']
             ]);
             $user->save();
 
-            $structure = \Illuminate\Support\Facades\DB::table('structures')->where('tin_orgstruct',$request->getParsedBody()['user_tin_company'])->first();
-            if (!$structure){
-                \Illuminate\Support\Facades\DB::table('structures')
-                    ->insert(['tin_orgstruct' => $request->getParsedBody()['user_tin_company'], 'name_struct' => $request->getParsedBody()['user_tin_company'],'datetrange_struct' => '['.Carbon::now()->toDateString().',)']);
-            }
+//            $structure = \Illuminate\Support\Facades\DB::table('structures')->where('tin_orgstruct',$request->getParsedBody()['user_tin_company'])->first();
+//            if (!$structure){
+//                \Illuminate\Support\Facades\DB::table('structures')
+//                    ->insert(['tin_orgstruct' => $request->getParsedBody()['user_tin_company'], 'name_struct' => $request->getParsedBody()['user_tin_company'],'datetrange_struct' => '['.Carbon::now()->toDateString().',)']);
+//            }
         }
         return $user;
     }
