@@ -8,8 +8,6 @@ use App\Models\v1\Structures;
 use App\Repositories\v1\StructuresRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
-use InfyOm\Generator\Criteria\LimitOffsetCriteria;
-use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 
 /**
@@ -36,8 +34,6 @@ class StructuresAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $this->structuresRepository->pushCriteria(new RequestCriteria($request));
-        $this->structuresRepository->pushCriteria(new LimitOffsetCriteria($request));
         $structures = $this->structuresRepository->all();
 
         return $this->sendResponse($structures->toArray(), 'Structures retrieved successfully');

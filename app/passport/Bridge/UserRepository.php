@@ -31,7 +31,7 @@ class UserRepository implements UserRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getUserEntityByUserCredentials($username, $password, $grantType, ClientEntityInterface $clientEntity)
+    public function getUserEntityByUserCredentials($request, $username, $password, $grantType, ClientEntityInterface $clientEntity)
     {
         $provider = config('auth.guards.api.provider');
 
@@ -40,7 +40,7 @@ class UserRepository implements UserRepositoryInterface
         }
         //TODO тут изменяются или нет)
         if (method_exists($model, 'findForPassport')) {
-            $user = (new $model)->findForPassport($username);
+            $user = (new $model)->findForPassport($request, $username);
         } else {
             $user = (new $model)->where('email', $username)->first();
         }
