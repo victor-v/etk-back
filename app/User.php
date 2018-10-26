@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'user_pin_user','password','user_tin_company'
+        'user_pin_user', 'password', 'user_tin_company'
     ];
 
     public $primaryKey = 'id_user';
@@ -31,27 +31,35 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
     ];
+    //TODO удалить все после подключения авторизации
+    protected function getRequestParameter($parameter, $request, $default = null)
+    {
+        $requestParameters = (array) $request->getParsedBody();
 
+        return isset($requestParameters[$parameter]) ? $requestParameters[$parameter] : $default;
+    }
 
     //TODO переделать это
-    public function findForPassport($request, $username) {
-
-        $user =  $this->where('user_pin_user', $username)
-            //->where('user_tin_company',$request->getParsedBody()['user_tin_company'])
+    public function findForPassport($request, $username)
+    {
+        $company = $this->getRequestParameter('user_tin_company',$request);
+        $user = $this->where('user_pin_user', $username)
+            ->where('user_tin_company', $company)
             ->first();
         if (!$user) {
             $user = new User([
                 'user_pin_user' => $username,
                 'password' => bcrypt('123456'),
-                //'user_tin_company' => $request->getParsedBody()['user_tin_company']
+                'user_tin_company' => $company
             ]);
             $user->save();
-
-//            $structure = \Illuminate\Support\Facades\DB::table('structures')->where('tin_orgstruct',$request->getParsedBody()['user_tin_company'])->first();
-//            if (!$structure){
-//                \Illuminate\Support\Facades\DB::table('structures')
-//                    ->insert(['tin_orgstruct' => $request->getParsedBody()['user_tin_company'], 'name_struct' => $request->getParsedBody()['user_tin_company'],'datetrange_struct' => '['.Carbon::now()->toDateString().',)']);
-//            }
+        }
+        if ($company) {
+            $structure = \Illuminate\Support\Facades\DB::table('structures')->where('tin_orgstruct', $company)->first();
+            if (!$structure) {
+                \Illuminate\Support\Facades\DB::table('structures')
+                    ->insert(['tin_orgstruct' => $company, 'name_struct' => $company, 'datetrange_struct' => '[' . Carbon::now()->toDateString() . ',)']);
+            }
         }
         return $user;
     }
