@@ -14,7 +14,6 @@ use Response;
  * Class WorksAPIController
  * @package App\Http\Controllers\API\v1
  */
-
 class WorksAPIController extends AppAPIBaseController
 {
     /** @var  WorksRepository */
@@ -34,9 +33,20 @@ class WorksAPIController extends AppAPIBaseController
      */
     public function index(Request $request)
     {
+        if ($request->page) {
+            $page = $request->page;
+        } else {
+            $page = 1;
+        }
+        if ($request->tin) {
 
-        $works = json_decode(DB::select('SELECT public."PersonWorks"(\''.auth()->user()->user_pin_user.'\',\''.$request->page.'\')')[0]->PersonWorks);
+            $works = json_decode(DB::select('SELECT public."OrgWorkers"(\'628261\', \'2018-10-18\', 1)')[0]->PersonWorks);
 
+        } else {
+
+            $works = json_decode(DB::select('SELECT public."PersonWorks"(\'' . auth()->user()->user_pin_user . '\',\'' . $page . '\')')[0]->PersonWorks);
+
+        }
         return $this->sendResponse($works, 'Works retrieved successfully');
 
     }

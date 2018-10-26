@@ -16,15 +16,17 @@ use Illuminate\Http\Request;
 //TODO не забыть throttle
 Route::group(['middleware' => ['auth:api','cors','throttle']], function() {
     Route::resource('errors', 'ErrorsAPIController');
+
     Route::resource('works', 'WorksAPIController');
+
+    Route::resource('constants', 'ConstantsAPIController');
+
+    Route::resource('logs', 'LogsAPIController');
+
+    Route::resource('positions', 'PositionsAPIController');
+
+    Route::resource('structures', 'StructuresAPIController');
+
+    Route::resource('vacancies', 'VacancyAPIController');
 });
 
-Route::resource('constants', 'ConstantsAPIController');
-
-Route::resource('logs', 'LogsAPIController');
-
-Route::resource('positions', 'PositionsAPIController');
-
-Route::resource('structures', 'StructuresAPIController');
-
-Route::resource('vacancies', 'VacancyAPIController');
