@@ -40,7 +40,7 @@ class WorksAPIController extends AppAPIBaseController
         }
         if ($request->tin) {
 
-            $works = json_decode(DB::select('SELECT public."OrgWorkers"(\'628261\', \'2018-10-18\', 1)')[0]->PersonWorks);
+            $works = json_decode(DB::select('SELECT public."OrgWorkers"(\'628261\', \'2018-10-18\', 1)')[0]->OrgWorkers);
 
         } else {
 
